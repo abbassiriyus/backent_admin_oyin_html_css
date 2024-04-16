@@ -4,7 +4,9 @@ const fileUpload = require("express-fileupload");
 
 
 const Users=require("./routes/usersRouter.js") 
-
+const game_api=require('./routes/ganeRouter.js')
+const random =require("./routes/randomImage.js")
+const verify=require('./routes/verify.js')
 
 
 
