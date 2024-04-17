@@ -7,7 +7,7 @@ const { put_image, delete_image, upload_image } = require('../middlewere/file_up
 // Create a new user
 router.post('/users', async (req, res) => {
   try {
-    const { type, fullname, email, year, sinf } = req.body;
+    const { type, fullname, email, year, sinf,password } = req.body;
   var image=upload_image(req)
     const newUser = await pool.query(
       'INSERT INTO users (type, fullname, email, image, year, sinf,password) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
@@ -20,7 +20,31 @@ router.post('/users', async (req, res) => {
   }
 });
 
+// Login endpoint
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
 
+  // Check if email and password are provided
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email and password are required' });
+  }
+
+  try {
+    // Query the users table
+    const query = 'SELECT * FROM users WHERE email = $1';
+    const { rows } = await pool.query(query, [email]);
+
+    // Check if user exists and password is correct
+    if (rows.length > 0 && rows[0].password === password) {
+      res.json(rows[0]); // Send the user object
+    } else {
+      res.status(401).json({ error: 'Invalid email or password' });
+    }
+  } catch (err) {
+    console.error('Error:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 // Get all users
 router.get('/users', async (req, res) => {
@@ -49,7 +73,7 @@ router.get('/users/:id', async (req, res) => {
 router.put('/users/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { type, fullname, email, image, year, sinf } = req.body;
+    const { type, fullname, email, image, year, sinf,password } = req.body;
     const user = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
 put_image(user[0].image,req)
     const updatedUser = await pool.query(
