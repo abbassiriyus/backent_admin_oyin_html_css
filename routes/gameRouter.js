@@ -23,10 +23,28 @@ router.post('/game_user', async (req, res) => {
   }
 });
 
+
 // Read
 router.get('/game_user', async (req, res) => {
   try {
     const gameUsers = await pool.query('SELECT * FROM game_user');
+    res.json(gameUsers.rows);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+// Read
+router.get('/game_user/all', async (req, res) => {
+  try {
+    const gameUsers = await pool.query('SELECT * FROM game_user');
+    const Users = await pool.query('SELECT * FROM users');
+    for (let i = 0; i < Users.length; i++) {
+    Users[i].user_game=[]
+    for (let j = 0; j < gameUsers.length; j++) {
+    
+     }
+    }
     res.json(gameUsers.rows);
   } catch (err) {
     console.error(err.message);

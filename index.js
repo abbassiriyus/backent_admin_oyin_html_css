@@ -1,7 +1,7 @@
 const bodyParser = require('body-parser');
 const fileUpload = require("express-fileupload");
 const Users=require("./routes/usersRouter.js") 
-const game_api=require('./routes/ganeRouter.js')
+const game_api=require('./routes/gameRouter.js')
 const express = require("express");
 const app = express();
 const cors = require("cors");
