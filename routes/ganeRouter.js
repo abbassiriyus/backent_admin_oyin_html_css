@@ -1,7 +1,7 @@
 // app.js
 const express = require('express');
 const app = express();
-const pool = require('./db'); // Assuming you have a database connection setup
+const pool = require('../db'); // Assuming you have a database connection setup
 
 app.use(express.json());
 

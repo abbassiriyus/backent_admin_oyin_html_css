@@ -1,90 +1,78 @@
-// userRouter.js
-const express = require('express');
-const jwt = require('jsonwebtoken');
-const nodemailer = require('nodemailer');
-const pool=require("../db.js") 
-const router = express.Router();
 
+const express = require('express');
+const router = express.Router();
+const pool = require('../db'); // Assuming you have a database connection setup
+const { put_image, delete_image, upload_image } = require('../middlewere/file_upload');
 
 // Create a new user
 router.post('/users', async (req, res) => {
-  const { type, fullname, email, image, year, sinf} = req.body;
-
   try {
-    const code = Math.floor(100000 + Math.random() * 900000); // Generate a 6-digit verification code
-    const query = 'INSERT INTO users (type, fullname, email, image, year, sinf, verification_code) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *';
-    const values = [type, fullname, email, image, year, sinf, code];
-    const { rows } = await pool.query(query, values);
-    await sendVerificationEmail(email, code);
-    res.status(201).json(rows[0]);
+    const { type, fullname, email, year, sinf } = req.body;
+  var image=upload_image(req)
+    const newUser = await pool.query(
+      'INSERT INTO users (type, fullname, email, image, year, sinf) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      [type, fullname, email, image, year, sinf]
+    );
+    res.json(newUser.rows[0]);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Error creating user' });
+    console.error(err.message);
+    res.status(500).json({ error: 'Server error' });
   }
 });
 
-// Login
-router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+// Get all users
+router.get('/users', async (req, res) => {
   try {
-    const query = 'SELECT * FROM users WHERE email = $1';
-    const { rows } = await pool.query(query, [email]);
-
-    if (rows.length === 0) {
-      return res.status(401).json({ message: 'Invalid email or password' });
-    }
-
-    // Verify the password (you'll need to implement this logic)
-    if (!verifyPassword(rows[0].password, password)) {
-      return res.status(401).json({ message: 'Invalid email or password' });
-    }
-
-    // Generate a JSON Web Token
-    const token = jwt.sign({ userId: rows[0].id }, 'your_secret_key', { expiresIn: '1h' });
-    res.json({ token });
+    const allUsers = await pool.query('SELECT * FROM users');
+    res.json(allUsers.rows);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Error logging in' });
+    console.error(err.message);
+    res.status(500).json({ error: 'Server error' });
   }
 });
 
-// Verify user email
-router.post('/verify', async (req, res) => {
-  const { email, code } = req.body;
-
+// Get a user by ID
+router.get('/users/:id', async (req, res) => {
   try {
-    const query = 'UPDATE users SET is_verified = true WHERE email = $1 AND verification_code = $2 RETURNING *';
-    const { rows } = await pool.query(query, [email, code]);
-
-    if (rows.length === 0) {
-      return res.status(400).json({ message: 'Invalid verification code' });
-    }
-
-    res.json({ message: 'Email verified' });
+    const { id } = req.params;
+    const user = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
+    res.json(user.rows[0]);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Error verifying email' });
+    console.error(err.message);
+    res.status(500).json({ error: 'Server error' });
   }
 });
 
-// Helper function to send verification email
-async function sendVerificationEmail(email, code) {
-  const transporter = nodemailer.createTransport({
-    // Your email transport configuration
-  });
+// Update a user by ID
+router.put('/users/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { type, fullname, email, image, year, sinf } = req.body;
+    const user = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
+put_image(user[0].image,req)
+    const updatedUser = await pool.query(
+      'UPDATE users SET type = $1, fullname = $2, email = $3, image = $4, year = $5, sinf = $6, time_update = CURRENT_TIMESTAMP WHERE id = $7 RETURNING *',
+      [type, fullname, email, image, year, sinf, id]
+    );
+    res.json(updatedUser.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
 
-  await transporter.sendMail({
-    from: 'your_email@example.com',
-    to: email,
-    subject: 'Verify your email',
-    text: `Your verification code is: ${code}`,
-  });
-}
-
-// Helper function to verify password (you'll need to implement this)
-function verifyPassword(hashedPassword, password) {
-  // Implement your password verification logic here
-  return true;
-}
+// Delete a user by ID
+router.delete('/users/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
+    delete_image(user[0].image)
+    const deletedUser = await pool.query('DELETE FROM users WHERE id = $1 RETURNING *', [id]);
+    res.json(deletedUser.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
 
 module.exports = router;

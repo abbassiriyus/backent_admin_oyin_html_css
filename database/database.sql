@@ -18,8 +18,6 @@ create table verify(
     "time_update" timestamp default current_timestamp not null
 )
 
-
-
 create table random_account_image(
     "id" serial primary key,
     "image" text,

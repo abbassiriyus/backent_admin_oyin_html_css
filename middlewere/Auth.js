@@ -1,5 +1,4 @@
 const pool = require("../db");
-const nodemailer=require('nodemailer')
 
 
 
@@ -8,35 +7,6 @@ function isBetweenStartAndEnd(start_day, end_day) {
     const startDate = new Date(start_day);
     const endDate = new Date(end_day);
     return currentTime >= startDate && currentTime <= endDate;
-  }
-  function sendEmail(email, password) {
-    // E-posta gönderme işlemleri için nodemailer yapılandırmasını yapın
-    const transporter = nodemailer.createTransport({
-      // E-posta sağlayıcınızın SMTP bilgilerini burada yapılandırın
-      // Örneğin, Gmail kullanıyorsanız:
-      service: 'Gmail',
-      auth: {
-        user: 'uzdub.group@gmail.com',
-        pass: 'uzdub123!@#',
-      },
-    });
-  
-    // E-posta gövdesini ve diğer ayarları yapılandırın
-    const mailOptions = {
-      from: 'uzdub.group@gmail.com',
-      to: email,
-      subject: 'Parolanızı alın',
-      text: `sizning parolingiz: ${password}`,
-    };
-  
-    // E-postayı gönderin
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.log('E-posta gönderilirken bir hata oluştu:', error);
-      } else {
-        console.log('E-posta başarıyla gönderildi:', info.response);
-      }
-    });
   }
 
 async function getUserByTokenFromHeader(req) {
@@ -63,4 +33,4 @@ async function getUserByTokenFromHeader(req) {
       return false
     }
   }
-  module.exports={getUserByTokenFromHeader,isBetweenStartAndEnd,sendEmail}
+  module.exports={getUserByTokenFromHeader,isBetweenStartAndEnd}
