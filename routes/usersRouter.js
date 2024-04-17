@@ -10,8 +10,8 @@ router.post('/users', async (req, res) => {
     const { type, fullname, email, year, sinf } = req.body;
   var image=upload_image(req)
     const newUser = await pool.query(
-      'INSERT INTO users (type, fullname, email, image, year, sinf) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-      [type, fullname, email, image, year, sinf]
+      'INSERT INTO users (type, fullname, email, image, year, sinf,password) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+      [type, fullname, email, image, year, sinf, password]
     );
     res.json(newUser.rows[0]);
   } catch (err) {
@@ -19,6 +19,8 @@ router.post('/users', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
+
+
 
 // Get all users
 router.get('/users', async (req, res) => {
@@ -51,8 +53,8 @@ router.put('/users/:id', async (req, res) => {
     const user = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
 put_image(user[0].image,req)
     const updatedUser = await pool.query(
-      'UPDATE users SET type = $1, fullname = $2, email = $3, image = $4, year = $5, sinf = $6, time_update = CURRENT_TIMESTAMP WHERE id = $7 RETURNING *',
-      [type, fullname, email, image, year, sinf, id]
+      'UPDATE users SET type = $1, fullname = $2, email = $3, image = $4, year = $5, sinf = $6,password=$7, time_update = CURRENT_TIMESTAMP WHERE id = $8 RETURNING *',
+      [type, fullname, email, image, year, sinf,password, id]
     );
     res.json(updatedUser.rows[0]);
   } catch (err) {
