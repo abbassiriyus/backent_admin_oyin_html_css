@@ -1,6 +1,6 @@
 create table users(
   "id" serial primary key,
-  "type" text not null, --admin/users
+  "type" text default 0 not null, --admin/users
   "fullname" text not null,
   "email" text not null,
   "image" text,

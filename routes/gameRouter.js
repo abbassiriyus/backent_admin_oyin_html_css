@@ -37,12 +37,14 @@ router.get('/game_user', async (req, res) => {
 // Read
 router.get('/game_user/all', async (req, res) => {
   try {
-    const gameUsers = await pool.query('SELECT * FROM game_user');
+    const gameUsers = await pool.query('SELECT * FROM game_user ORDER BY game_number');
     const Users = await pool.query('SELECT * FROM users');
     for (let i = 0; i < Users.length; i++) {
     Users[i].user_game=[]
     for (let j = 0; j < gameUsers.length; j++) {
-    
+    if(Users[i].id==gameUsers[j].user_id){
+Users[i].user_game.push(gameUsers[j])
+    }
      }
     }
     res.json(gameUsers.rows);
