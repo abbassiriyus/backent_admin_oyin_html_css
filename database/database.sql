@@ -4,7 +4,7 @@ create table users(
   "fullname" text not null,
   "email" text not null,
   "image" text,
-  "yaer" integer,
+  "year" integer,
   "sinf" integer,
   "password" text not null,
   "time_create" timestamp default current_timestamp not null,

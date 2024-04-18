@@ -7,11 +7,11 @@ const { put_image, delete_image, upload_image } = require('../middlewere/file_up
 // Create a new user
 router.post('/users', async (req, res) => {
   try {
-    const { type, fullname, email, year, sinf,password } = req.body;
+    const { fullname, email, year, sinf,password } = req.body;
   var image=upload_image(req)
     const newUser = await pool.query(
-      'INSERT INTO users (type, fullname, email, image, year, sinf,password) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-      [type, fullname, email, image, year, sinf, password]
+      'INSERT INTO users (fullname, email, image, year, sinf,password) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      [ fullname, email, image, year, sinf, password]
     );
     res.json(newUser.rows[0]);
   } catch (err) {
