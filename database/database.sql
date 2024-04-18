@@ -11,21 +11,6 @@ create table users(
   "time_update" timestamp default current_timestamp not null
 );
 
-create table verify(
-    "id" serial primary key,
-    "code" integer not null,
-    "email" text not null,
-    "time_create" timestamp default current_timestamp not null,
-    "time_update" timestamp default current_timestamp not null
-)
-
-create table random_account_image(
-    "id" serial primary key,
-    "image" text,
-    "time_create" timestamp default current_timestamp not null,
-    "time_update" timestamp default current_timestamp not null
-)
-
 
 create table game_user{
     "id" serial primary key,

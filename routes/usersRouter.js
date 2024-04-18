@@ -20,6 +20,20 @@ router.post('/users', async (req, res) => {
   }
 });
 
+router.post('/users/admin', async (req, res) => {
+  try {
+    const { fullname, email, year, sinf,password } = req.body;
+  var image=upload_image(req)
+    const newUser = await pool.query(
+      'INSERT INTO users (fullname, email, image, year, sinf,password,type) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      [fullname, email, image, year, sinf, password, 1 ]
+    );
+    res.json(newUser.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
 // Login endpoint
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
