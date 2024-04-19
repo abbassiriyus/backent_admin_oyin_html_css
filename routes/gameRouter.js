@@ -19,7 +19,7 @@ router.post('/game_user', async (req, res) => {
     res.json(newGameUser.rows[0]);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    res.status(500).send({error:error.message});
   }
 });
 
@@ -31,7 +31,7 @@ router.get('/game_user', async (req, res) => {
     res.json(gameUsers.rows);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    res.status(500).send({error:error.message});
   }
 });
 // Read
@@ -50,7 +50,7 @@ Users[i].user_game.push(gameUsers[j])
     res.json(gameUsers.rows);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    res.status(500).send({error:error.message});
   }
 });
 
@@ -66,7 +66,7 @@ router.put('/game_user/:id', async (req, res) => {
     res.json(updatedGameUser.rows[0]);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    res.status(500).send({error:error.message});
   }
 });
 
@@ -81,7 +81,7 @@ router.delete('/game_user/:id', async (req, res) => {
     res.json(deletedGameUser.rows[0]);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    res.status(500).send({error:error.message});
   }
 });
 

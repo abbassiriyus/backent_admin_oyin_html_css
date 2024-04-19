@@ -6,14 +6,14 @@ create table users(
   "image" text,
   "year" integer,
   "sinf" integer,
-   UNIQUE(email)
+   UNIQUE(email),
   "password" text not null,
   "time_create" timestamp default current_timestamp not null,
   "time_update" timestamp default current_timestamp not null
 );
 
 
-create table game_user{
+create table game_user(
     "id" serial primary key,
     "user_id" integer not null,
     "result" integer not null,
@@ -22,4 +22,4 @@ create table game_user{
     "game_title" text not null,
     "time_create" timestamp default current_timestamp not null,
     "time_update" timestamp default current_timestamp not null
-} 
+)
