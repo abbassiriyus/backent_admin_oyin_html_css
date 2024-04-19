@@ -6,6 +6,7 @@ create table users(
   "image" text,
   "year" integer,
   "sinf" integer,
+   UNIQUE(email)
   "password" text not null,
   "time_create" timestamp default current_timestamp not null,
   "time_update" timestamp default current_timestamp not null

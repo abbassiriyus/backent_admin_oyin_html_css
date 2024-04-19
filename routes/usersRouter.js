@@ -44,11 +44,8 @@ router.post('/login', async (req, res) => {
   }
 
   try {
-    // Query the users table
     const query = 'SELECT * FROM users WHERE email = $1';
     const { rows } = await pool.query(query, [email]);
-
-    // Check if user exists and password is correct
     if (rows.length > 0 && rows[0].password === password) {
       res.json(rows[0]); // Send the user object
     } else {
@@ -88,16 +85,22 @@ router.put('/users/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const {  fullname, email, year, sinf } = req.body;
-    console.log(req.body,"SDsd");
- const user = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
- console.log(user,';;');   
- var image=put_image(user.rows[0].image,req)
-    console.log(image,"sds");
+  if ((req.body && req.body.image) || (req.files && req.files.image )) {
+   const user = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
+    var image=put_image(user.rows[0].image,req)
     const updatedUser = await pool.query(
       'UPDATE users SET  fullname = $1, email = $2, image = $3, year = $4, sinf =$5, time_update = CURRENT_TIMESTAMP WHERE id = $6 RETURNING *',
       [fullname, email, image, year, sinf, id]
     );
-    res.json(updatedUser.rows[0]);
+    res.json(updatedUser.rows[0]); 
+  }else{
+    const updatedUser = await pool.query(
+      'UPDATE users SET  fullname = $1, email = $2, year = $3, sinf =$4, time_update = CURRENT_TIMESTAMP WHERE id = $5 RETURNING *',
+      [fullname, email, year, sinf, id]
+    );
+    res.json(updatedUser.rows[0]); 
+  }
+    
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ error: 'Server error' });
