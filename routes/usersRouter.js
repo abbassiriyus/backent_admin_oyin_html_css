@@ -19,14 +19,14 @@ router.post('/users', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
 router.post('/users/admin', async (req, res) => {
   try {
     const { fullname, email, year, sinf,password } = req.body;
+    type=1
   var image=upload_image(req)
     const newUser = await pool.query(
-      'INSERT INTO users (fullname, email, image, year, sinf,password,type) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-      [fullname, email, image, year, sinf, password, 1 ]
+      'INSERT INTO users (fullname, email, image, year, sinf,password,type) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+      [ fullname, email, image, year, sinf, password,type]
     );
     res.json(newUser.rows[0]);
   } catch (err) {
@@ -34,6 +34,7 @@ router.post('/users/admin', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
 // Login endpoint
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
@@ -89,14 +90,14 @@ router.put('/users/:id', async (req, res) => {
    const user = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
     var image=put_image(user.rows[0].image,req)
     const updatedUser = await pool.query(
-      'UPDATE users SET  fullname = $1, email = $2, image = $3, year = $4, sinf =$5, time_update = CURRENT_TIMESTAMP WHERE id = $6 RETURNING *',
-      [fullname, email, image, year, sinf, id]
+      'UPDATE users SET  fullname = $1, image = $2, year = $3, sinf =$4, time_update = CURRENT_TIMESTAMP WHERE id = $5 RETURNING *',
+      [fullname,  image, year, sinf, id]
     );
     res.json(updatedUser.rows[0]); 
   }else{
     const updatedUser = await pool.query(
-      'UPDATE users SET  fullname = $1, email = $2, year = $3, sinf =$4, time_update = CURRENT_TIMESTAMP WHERE id = $5 RETURNING *',
-      [fullname, email, year, sinf, id]
+      'UPDATE users SET  fullname = $1, year = $2, sinf =$3, time_update = CURRENT_TIMESTAMP WHERE id = $4 RETURNING *',
+      [fullname,year, sinf, id]
     );
     res.json(updatedUser.rows[0]); 
   }
