@@ -16,7 +16,7 @@ router.post('/users', async (req, res) => {
     res.json(newUser.rows[0]);
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -31,7 +31,7 @@ router.post('/users/admin', async (req, res) => {
     res.json(newUser.rows[0]);
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: err.message });
   }
 });
 // Login endpoint
@@ -64,7 +64,7 @@ router.get('/users', async (req, res) => {
     res.json(allUsers.rows);
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -76,7 +76,7 @@ router.get('/users/:id', async (req, res) => {
     res.json(user.rows[0]);
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -103,7 +103,7 @@ router.put('/users/:id', async (req, res) => {
     
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -117,7 +117,7 @@ router.delete('/users/:id', async (req, res) => {
     res.json(deletedUser.rows[0]);
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: err.message });
   }
 });
 
