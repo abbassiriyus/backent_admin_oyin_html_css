@@ -39,15 +39,15 @@ router.get('/game_user/all', async (req, res) => {
   try {
     const gameUsers = await pool.query('SELECT * FROM game_user ORDER BY game_number');
     const Users = await pool.query('SELECT * FROM users');
-    for (let i = 0; i < Users.length; i++) {
-    Users[i].user_game=[]
-    for (let j = 0; j < gameUsers.length; j++) {
-    if(Users[i].id==gameUsers[j].user_id){
-Users[i].user_game.push(gameUsers[j])
+    for (let i = 0; i < Users.rows.length; i++) {
+    Users.rows.rows[i].user_game=[]
+    for (let j = 0; j < gameUsers.rows.length; j++) {
+    if(Users.rows[i].id==gameUsers.rows[j].user_id){
+    Users.rows[i].user_game.push(gameUsers.rows[j])
     }
      }
     }
-    res.json(gameUsers.rows);
+    res.json(Users.rows);
   } catch (err) {
     console.error(err.message);
     res.status(500).send({error:err.message});

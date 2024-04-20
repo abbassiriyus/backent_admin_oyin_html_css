@@ -23,3 +23,6 @@ create table game_user(
     "time_create" timestamp default current_timestamp not null,
     "time_update" timestamp default current_timestamp not null
 )
+
+ALTER SEQUENCE game_user_id_seq OWNED BY game_user.id;
+GRANT USAGE, SELECT ON SEQUENCE game_user_id_seq TO abbasuz1_abbas1;
