@@ -17,7 +17,7 @@ create table game_user(
     "id" serial primary key,
     "user_id" integer not null,
     "result" integer not null,
-    "time" integer not null,
+    "time" text not null,
     "game_number" integer not null,
     "game_title" text not null,
     "time_create" timestamp default current_timestamp not null,
