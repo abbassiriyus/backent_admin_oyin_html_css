@@ -112,10 +112,9 @@ router.put('/users/:id', async (req, res) => {
 router.delete('/users/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
-    delete_image(user[0].image)
     const deletedUser = await pool.query('DELETE FROM users WHERE id = $1 RETURNING *', [id]);
-    res.json(deletedUser.rows[0]);
+   delete_image(deletedUser.rows[0].image) 
+   res.json(deletedUser.rows[0]);
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ error: err.message });

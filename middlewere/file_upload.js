@@ -34,11 +34,14 @@ var  upload_image=(req)=>{
   }
 
 var delete_image=(file_name)=>{ 
-var file_tit=file_name.slice(file_name.lastIndexOf('/')+1)
+  if(file_name){
+   var file_tit=file_name.slice(file_name.lastIndexOf('/')+1)
 console.log(file_name,file_tit);
 if(file_tit.includes("local_image")){
  fs.unlink(`${__dirname}/../uploads/${file_tit}`,()=>{})   
-}
+} 
+  }
+
 }
 
 var put_image=(file_name,req)=>{
