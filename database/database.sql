@@ -4,6 +4,7 @@ create table users(
   "fullname" text not null,
   "email" text not null,
   "image" text,
+  "phone" text not null,
   "year" integer,
   "sinf" integer,
    UNIQUE(email),
