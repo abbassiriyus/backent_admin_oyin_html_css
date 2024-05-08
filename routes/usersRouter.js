@@ -90,13 +90,13 @@ router.put('/users/:id', async (req, res) => {
    const user = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
     var image=put_image(user.rows[0].image,req)
     const updatedUser = await pool.query(
-      'UPDATE users SET  fullname = $1, image = $2, year = $3, sinf =$4, time_update = CURRENT_TIMESTAMP WHERE id = $5 RETURNING *',
+      'UPDATE users SET  fullname = $1, image = $2, year = $3, sinf =$4, phone=$5 , time_update = CURRENT_TIMESTAMP WHERE id = $6 RETURNING *',
       [fullname,  image, year, sinf, id]
     );
     res.json(updatedUser.rows[0]); 
   }else{
     const updatedUser = await pool.query(
-      'UPDATE users SET  fullname = $1, year = $2, sinf =$3, time_update = CURRENT_TIMESTAMP WHERE id = $4 RETURNING *',
+      'UPDATE users SET  fullname = $1, year = $2, sinf =$3,phone=$4, time_update = CURRENT_TIMESTAMP WHERE id = $5 RETURNING *',
       [fullname,year, sinf, id]
     );
     res.json(updatedUser.rows[0]); 
