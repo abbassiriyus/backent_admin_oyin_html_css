@@ -3,11 +3,13 @@ const app = express();
 const connection = require('../db'); // Assuming you have a database connection setup
 
 app.use(express.json());
+const router = express.Router();
 
 // Create
 router.post('/game_user', (req, res) => {
     const { user_id, result, time, game_number, game_title } = req.body;
-    const query = 'INSERT INTO game_user (user_id, result, time, game_number, game_title) VALUES (?, ?, ?, ?, ?)';
+    try{
+       const query = 'INSERT INTO game_user (user_id, result, time, game_number, game_title) VALUES (?, ?, ?, ?, ?)';
     const values = [user_id, result, time, game_number, game_title];
     connection.query(query, values, function (err, result, fields) {
       if (err) {
@@ -16,7 +18,11 @@ router.post('/game_user', (req, res) => {
       } else {
         res.json(result);
       }
-    });
+    });   
+    }catch(err){
+        res.status(500).send({ error: err.message });
+    }
+  
   });
   
   // Read
@@ -64,7 +70,8 @@ router.post('/game_user', (req, res) => {
   // Update
   router.put('/game_user/:id', (req, res) => {
     const { id } = req.params;
-    const { user_id, result, time, game_number, game_title } = req.body;
+    try{
+       const { user_id, result, time, game_number, game_title } = req.body;
     const query = 'UPDATE game_user SET user_id = ?, result = ?, time = ?, game_number = ?, game_title = ?, time_update = current_timestamp WHERE id = ?';
     const values = [user_id, result, time, game_number, game_title, id];
     connection.query(query, values, function (err, result, fields) {
@@ -74,7 +81,11 @@ router.post('/game_user', (req, res) => {
       } else {
         res.json(result);
       }
-    });
+    });   
+    }catch(err){
+        res.status(500).send({ error: err.message }); 
+    }
+  
   });
   
   // Delete

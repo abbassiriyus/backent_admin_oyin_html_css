@@ -11,10 +11,8 @@ app.use(express.json());
 app.use(express.static('./uploads'))
 app.use(cors({origin: '*'}))
 
-
 app.use("/auth/v1/", Users)
 app.use("/api/v1/", game_api)
-
 
 app.listen(4005, () => {
     console.log("SERVER IS RUNNING");
